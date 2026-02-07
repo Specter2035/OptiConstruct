@@ -1,0 +1,50 @@
+Folder PATH listing for volume Data
+Volume serial number is 241B-3126
+D:.
+|   dashboardSucursal.php
+|   dashboardUsuario.php
+|   index.php
+|   Script.js
+|   structure.txt
+|   templatemo-3d-coverflow-scripts.js
+|   
++---css
+|       cssUsuario.css
+|       templatemo-3d-coverflow.css
+|       
++---images
+|       cascading-waterfall.jpg
+|       Construccion01.jpg
+|       Construccion02.jpg
+|       Construccion03.jpg
+|       Construccion04.avif
+|       Construccion05.jpg
+|       Construccion06.jpg
+|       Construccion07.png
+|       forest-path.jpg
+|       mountain-landscape.jpg
+|       ocean-sunset-golden-hour.jpg
+|       rolling-sand-dunes.jpg
+|       serene-water-mirroring.jpg
+|       starry-night.jpg
+|       
++---ImagesAcceso
+|       direction.svg
+|       email.png
+|       email.svg
+|       fondo.jpeg
+|       logo.png
+|       mision.png
+|       name.png
+|       name.svg
+|       password.png
+|       password.svg
+|       phone.svg
+|       valores.png
+|       vision.png
+|       
+\---php
+        conexion_be.php
+        login.php
+        registro_usuario_be.php
+        
