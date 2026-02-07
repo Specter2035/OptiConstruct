@@ -1,0 +1,44 @@
+.
+├── blueprints
+│   ├── ##1100-sq.-ft.Small-Cabin-3-Bedrooms.dxf
+│   ├── ##call-center-offices.dxf
+│   ├── #1100-sq.-ft.Small-Cabin-3-Bedrooms.dxf
+│   ├── #House-complete-project.dxf
+│   ├── #call-center-offices.dxf
+│   ├── 1100-sq.-ft.Small-Cabin-3-Bedrooms.dxf
+│   ├── House-complete-project.dxf
+│   └── call-center-offices.dxf
+├── config
+│   ├── defaults.yml
+│   └── layers.yml
+├── core
+│   ├── __pycache__
+│   │   └── loader.cpython-38.pyc
+│   ├── layer_map.py
+│   ├── loader.py
+│   └── normalizer.py
+├── domain
+│   ├── opening.py
+│   ├── room.py
+│   ├── slab.py
+│   └── wall.py
+├── geometry
+│   ├── cleaners.py
+│   ├── converters.py
+│   └── offsets.py
+├── main.py
+├── measurements
+│   ├── global_metrics.py
+│   ├── room_metrics.py
+│   └── wall_metrics.py
+├── output
+│   ├── exporters.py
+│   └── quantities.py
+├── structurePrevious.txt
+├── structureProyectoIntegrador.txt
+├── test_loader.py
+└── validation
+    ├── blueprint_checks.py
+    └── geometry_checks.py
+
+9 directories, 32 files
