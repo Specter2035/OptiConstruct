@@ -1,292 +1,79 @@
-# backend/config/canonical_catalog.yml
-# OptiConstruct Phase 0: Canonical catalog (elements/finishes/systems/meta)
-# Source of truth: keep in repo, seed into DB if/when needed.
-# canonical_id values must be immutable once used.
-
 version: 1
 locale_default: es
 
-parameters:
-  - key: height_m
-    unit: m
-    value_type: number
-    min: 1.8
-    max: 5.0
-    description_es: "Altura (m) usada para cálculo de área/volumen de muros."
-
-  - key: thickness_m
-    unit: m
-    value_type: number
-    min: 0.03
-    max: 1.0
-    description_es: "Espesor (m) usado para cálculo de volumen (losa/muro/estructura)."
-
-  - key: deduct_openings
-    unit: bool
-    value_type: boolean
-    description_es: "Si se deben descontar vanos (puertas/ventanas) del área/volumen del muro."
-
 materials:
-  # -------------------------
-  # Structural (Elements)
-  # -------------------------
-  - canonical_id: foundation
-    labels:
-      es: "Cimentación"
-    kind: element
-    group: structural
-    measurable_in_v1: false
+  - canonical_id: unknown
+    label_es: "Desconocido"
+    group: "Meta"
     quantity_basis: none
-    supports_secondary_basis: [volume_m3]
-    required_parameters: []
-    optional_parameters: [thickness_m]
-    expected_geometry: [mixed]
-    strategy_hint: "Frecuentemente no está completamente definido en DXF arquitectónico."
-    status: active
-    notes: "Objetivo futuro; evitar precisión falsa en v1."
+    keywords: []
+
+  # Estructural
+  - canonical_id: FOUNDATION
+    label_es: "Cimentación"
+    group: "Estructural"
+    quantity_basis: volume_m3
     keywords: ["CIMENT", "ZAPATA", "DALA", "CADENA", "FUND", "FOUND", "FOOTING"]
 
-  - canonical_id: column
-    labels:
-      es: "Columna"
-    kind: element
-    group: structural
-    measurable_in_v1: false
-    quantity_basis: none
-    supports_secondary_basis: [count, volume_m3]
-    required_parameters: []
-    optional_parameters: [thickness_m]
-    expected_geometry: [block, polygon, mixed]
-    strategy_hint: "Suele representarse como bloque o polígono; conteo antes que volumetría."
-    status: active
-    keywords: ["COLUM", "COLUMN", "PILAR", "POSTE"]
+  - canonical_id: COLUMN
+    label_es: "Columna"
+    group: "Estructural"
+    quantity_basis: volume_m3
+    keywords: ["COLUM", "COLUMN", "PILAR", "POST"]
 
-  - canonical_id: beam
-    labels:
-      es: "Viga"
-    kind: element
-    group: structural
-    measurable_in_v1: false
-    quantity_basis: none
-    supports_secondary_basis: [length_m, volume_m3]
-    required_parameters: []
-    optional_parameters: [thickness_m]
-    expected_geometry: [polyline, line, mixed]
-    strategy_hint: "En 2D suele faltar sección; medir longitud puede ser posible en v2."
-    status: active
-    keywords: ["VIGA", "BEAM", "TRABE", "DALASUP"]
+  - canonical_id: BEAM
+    label_es: "Viga"
+    group: "Estructural"
+    quantity_basis: volume_m3
+    keywords: ["VIGA", "BEAM", "TRABE", "TRAB", "DAL"]
 
-  - canonical_id: slab
-    labels:
-      es: "Losa"
-    kind: element
-    group: structural
-    measurable_in_v1: true
+  - canonical_id: SLAB
+    label_es: "Losa"
+    group: "Estructural"
     quantity_basis: area_m2
-    supports_secondary_basis: [volume_m3]
-    required_parameters: []
-    optional_parameters: [thickness_m]
-    expected_geometry: [polygon]
-    strategy_hint: "Polilíneas cerradas; calcular área y opcionalmente volumen con espesor."
-    status: active
-    keywords: ["LOSA", "SLAB", "ENTREPISO", "AZOTEA"]
+    keywords: ["LOSA", "SLAB", "PLACA"]
 
-  # -------------------------
-  # Walls (Elements)
-  # -------------------------
-  - canonical_id: wall_load_bearing
-    labels:
-      es: "Muro estructural"
-    kind: element
-    group: walls
-    measurable_in_v1: true
+  - canonical_id: WALL
+    label_es: "Muro"
+    group: "Estructural"
     quantity_basis: area_m2
-    supports_secondary_basis: [length_m, volume_m3]
-    required_parameters: [height_m]
-    optional_parameters: [thickness_m, deduct_openings]
-    expected_geometry: [polyline, polygon, mixed]
-    strategy_hint: "Preferir medición por eje/longitud + altura; volumen si hay espesor."
-    status: active
-    notes: "Si el plano no distingue, mapear ambos tipos de muro a la misma lógica en v1."
-    keywords: ["MURO", "WALL", "ESTRUC", "CARGA", "LOAD"]
+    keywords: ["MURO", "WALL", "PARED", "TABIQUE"]
 
-  - canonical_id: wall_partition
-    labels:
-      es: "Muro divisor"
-    kind: element
-    group: walls
-    measurable_in_v1: true
-    quantity_basis: area_m2
-    supports_secondary_basis: [length_m, volume_m3]
-    required_parameters: [height_m]
-    optional_parameters: [thickness_m, deduct_openings]
-    expected_geometry: [polyline, polygon, mixed]
-    strategy_hint: "Misma lógica que muro estructural; diferencia es semántica."
-    status: active
-    keywords: ["TABLAROCA", "TABIQUE", "DIVIS", "PARTIC", "PARTITION"]
-
-  # -------------------------
-  # Openings (Elements)
-  # -------------------------
-  - canonical_id: door
-    labels:
-      es: "Puerta"
-    kind: element
-    group: openings
-    measurable_in_v1: true
+  # Aberturas
+  - canonical_id: DOOR
+    label_es: "Puerta"
+    group: "Aberturas"
     quantity_basis: count
-    supports_secondary_basis: [area_m2]
-    required_parameters: []
-    optional_parameters: []
-    expected_geometry: [block, polyline, mixed]
-    strategy_hint: "Conteo por símbolos/bloques; dimensiones opcionales en fases posteriores."
-    status: active
-    keywords: ["PUERTA", "DOOR", "CERR", "PORTON"]
+    keywords: ["PUERTA", "DOOR", "DOR", "PORTA"]
 
-  - canonical_id: window
-    labels:
-      es: "Ventana"
-    kind: element
-    group: openings
-    measurable_in_v1: true
+  - canonical_id: WINDOW
+    label_es: "Ventana"
+    group: "Aberturas"
     quantity_basis: count
-    supports_secondary_basis: [area_m2]
-    required_parameters: []
-    optional_parameters: []
-    expected_geometry: [block, polyline, mixed]
-    strategy_hint: "Conteo por símbolos/bloques; área opcional si se infiere tamaño."
-    status: active
-    keywords: ["VENTANA", "WINDOW", "VANOS", "VIDRIO"]
+    keywords: ["VENTANA", "WINDOW", "WIN", "VNT"]
 
-  # -------------------------
-  # Circulation (Elements)
-  # -------------------------
-  - canonical_id: stair
-    labels:
-      es: "Escalera"
-    kind: element
-    group: circulation
-    measurable_in_v1: true
-    quantity_basis: count
-    supports_secondary_basis: []
-    required_parameters: []
-    optional_parameters: []
-    expected_geometry: [block, mixed]
-    strategy_hint: "Conteo en v1; medición detallada suele requerir más semántica."
-    status: active
-    keywords: ["ESCAL", "STAIR", "GRADAS"]
-
-  # -------------------------
-  # Finishes (Optional early)
-  # -------------------------
-  - canonical_id: ceiling_finish
-    labels:
-      es: "Plafón"
-    kind: finish
-    group: finishes
-    measurable_in_v1: false
-    quantity_basis: none
-    supports_secondary_basis: [area_m2]
-    required_parameters: []
-    optional_parameters: []
-    expected_geometry: [polygon, mixed]
-    strategy_hint: "Frecuentemente no está dibujado como región medible en planos base."
-    status: active
-    keywords: ["PLAFON", "CIELO", "CEILING", "FALSO"]
-
-  - canonical_id: floor_finish
-    labels:
-      es: "Acabado de piso"
-    kind: finish
-    group: finishes
-    measurable_in_v1: true
+  # Acabados
+  - canonical_id: FLOOR_FINISH
+    label_es: "Piso (acabado)"
+    group: "Acabados"
     quantity_basis: area_m2
-    supports_secondary_basis: []
-    required_parameters: []
-    optional_parameters: []
-    expected_geometry: [polygon, mixed]
-    strategy_hint: "Medible si existen regiones de acabado; si no, se deriva en fases avanzadas."
-    status: active
-    notes: "Si los planos no incluyen regiones de acabado, considerar marcar no medible en v1."
-    keywords: ["PISO", "FLOOR", "ACAB", "LOSETA", "MOSAICO", "PORCEL"]
+    keywords: ["PISO", "FLOOR", "TILE", "LOSETA", "CERAM", "PORCEL"]
 
-  # -------------------------
-  # Systems (Phase 2+)
-  # -------------------------
-  - canonical_id: plumbing_system
-    labels:
-      es: "Plomería"
-    kind: system
-    group: systems
-    measurable_in_v1: false
-    quantity_basis: none
-    supports_secondary_basis: []
-    required_parameters: []
-    optional_parameters: []
-    expected_geometry: [mixed]
-    strategy_hint: "Variabilidad alta en 2D; tratar como presencia/mapeo temprano."
-    status: active
-    keywords: ["PLOMER", "HIDRAU", "SANIT", "PLUMB", "AGUA", "DRENAJE"]
+  - canonical_id: WALL_FINISH
+    label_es: "Muro (acabado)"
+    group: "Acabados"
+    quantity_basis: area_m2
+    keywords: ["ACAB", "PINT", "PASTA", "YESO", "ENJARRE", "REVEST"]
 
-  - canonical_id: electrical_system
-    labels:
-      es: "Instalación eléctrica"
-    kind: system
-    group: systems
-    measurable_in_v1: false
+  # Sistemas
+  - canonical_id: ELECTRICAL
+    label_es: "Eléctrico"
+    group: "Sistemas"
     quantity_basis: none
-    supports_secondary_basis: []
-    required_parameters: []
-    optional_parameters: []
-    expected_geometry: [mixed]
-    strategy_hint: "Variabilidad alta en 2D; diferir cuantificación hasta v2+."
-    status: active
-    keywords: ["ELECT", "ELEC", "LUMIN", "CONTACTO", "APAGADOR"]
+    keywords: ["ELEC", "ELECT", "CONTACTO", "APAGADOR", "SWITCH", "TABLERO"]
 
-  - canonical_id: hvac_system
-    labels:
-      es: "Climatización (HVAC)"
-    kind: system
-    group: systems
-    measurable_in_v1: false
+  - canonical_id: PLUMBING
+    label_es: "Hidrosanitario"
+    group: "Sistemas"
     quantity_basis: none
-    supports_secondary_basis: []
-    required_parameters: []
-    optional_parameters: []
-    expected_geometry: [mixed]
-    strategy_hint: "Frecuentemente no cuantificable desde DXF genérico."
-    status: active
-    keywords: ["AIRE", "HVAC", "CLIMA", "VENTIL", "DUCTO", "ACOND"]
-
-  # -------------------------
-  # Meta / Control
-  # -------------------------
-  - canonical_id: ignore
-    labels:
-      es: "Ignorar"
-    kind: meta
-    group: meta
-    measurable_in_v1: false
-    quantity_basis: none
-    supports_secondary_basis: []
-    required_parameters: []
-    optional_parameters: []
-    expected_geometry: [mixed]
-    strategy_hint: "Excluye explícitamente entidades/capas del procesamiento."
-    status: active
-    keywords: ["ANOT", "TEXT", "DIM", "COTA", "HATCH", "EJES", "SYMBOL"]
-
-  - canonical_id: unknown
-    labels:
-      es: "Desconocido"
-    kind: meta
-    group: meta
-    measurable_in_v1: false
-    quantity_basis: none
-    supports_secondary_basis: []
-    required_parameters: []
-    optional_parameters: []
-    expected_geometry: [mixed]
-    strategy_hint: "Se usa cuando no se puede clasificar; debe generar advertencias."
-    status: active
-    keywords: []
+    keywords: ["AGUA", "HIDRO", "SANIT", "DRENAJE", "PLUMB", "TUBERIA"]

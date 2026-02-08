@@ -8,8 +8,6 @@ from typing import Dict, List, Literal, Optional, Tuple
 import yaml
 
 QuantityBasis = Literal["length_m", "area_m2", "volume_m3", "count", "none"]
-Kind = Literal["element", "finish", "system", "meta"]
-Status = Literal["active", "deprecated"]
 
 
 class CanonicalCatalogError(ValueError):
@@ -17,33 +15,11 @@ class CanonicalCatalogError(ValueError):
 
 
 @dataclass(frozen=True)
-class ParameterDef:
-    key: str
-    unit: str
-    value_type: str
-    min: Optional[float] = None
-    max: Optional[float] = None
-    description_es: Optional[str] = None
-    description_en: Optional[str] = None
-
-
-@dataclass(frozen=True)
 class CanonicalMaterial:
     canonical_id: str
-    labels: Dict[str, str]  # e.g. {"es": "Losa"}
-    kind: Kind
+    label_es: str
     group: str
-    measurable_in_v1: bool
     quantity_basis: QuantityBasis
-    supports_secondary_basis: List[QuantityBasis]
-    required_parameters: List[str]
-    optional_parameters: List[str]
-    expected_geometry: List[str]
-    strategy_hint: Optional[str] = None
-    status: Status = "active"
-    notes: Optional[str] = None
-
-    # Optional Phase-3 UX: keyword-based mapping suggestions
     keywords: Tuple[str, ...] = ()
 
 
@@ -51,7 +27,6 @@ class CanonicalMaterial:
 class CanonicalCatalog:
     version: int
     locale_default: str
-    parameters: Dict[str, ParameterDef]
     materials: Dict[str, CanonicalMaterial]
 
 
@@ -60,7 +35,7 @@ _CACHED: Optional[CanonicalCatalog] = None
 
 def load_catalog(path: str | Path) -> CanonicalCatalog:
     """
-    Load and validate the canonical catalog YAML.
+    Load and validate the simplified canonical catalog YAML.
     This is the ONLY function that should read the YAML file.
     """
     p = Path(path)
@@ -71,61 +46,39 @@ def load_catalog(path: str | Path) -> CanonicalCatalog:
     if not isinstance(data, dict):
         raise CanonicalCatalogError("Catalog root must be a mapping/dict.")
 
-    for key in ("version", "locale_default", "parameters", "materials"):
+    for key in ("version", "locale_default", "materials"):
         if key not in data:
             raise CanonicalCatalogError(f"Missing top-level key: {key}")
 
-    # -------- Parameters --------
-    raw_params = data["parameters"]
-    if not isinstance(raw_params, list):
-        raise CanonicalCatalogError("'parameters' must be a list.")
-
-    params: Dict[str, ParameterDef] = {}
-    for raw in raw_params:
-        if not isinstance(raw, dict):
-            raise CanonicalCatalogError("Each parameter must be a mapping/dict.")
-        if "key" not in raw:
-            raise CanonicalCatalogError("Parameter missing required field 'key'.")
-
-        key = str(raw["key"]).strip()
-        if not key:
-            raise CanonicalCatalogError("Parameter 'key' cannot be empty.")
-        if key in params:
-            raise CanonicalCatalogError(f"Duplicate parameter key: {key}")
-
-        params[key] = ParameterDef(
-            key=key,
-            unit=str(raw.get("unit", "")).strip(),
-            value_type=str(raw.get("value_type", "")).strip(),
-            min=raw.get("min"),
-            max=raw.get("max"),
-            description_es=raw.get("description_es"),
-            description_en=raw.get("description_en"),
-        )
-
-    # -------- Materials --------
     raw_mats = data["materials"]
     if not isinstance(raw_mats, list):
         raise CanonicalCatalogError("'materials' must be a list.")
 
     mats: Dict[str, CanonicalMaterial] = {}
+
     for raw in raw_mats:
         if not isinstance(raw, dict):
             raise CanonicalCatalogError("Each material must be a mapping/dict.")
 
-        cid = raw.get("canonical_id")
+        cid = str(raw.get("canonical_id", "")).strip()
         if not cid:
             raise CanonicalCatalogError("Material missing required field 'canonical_id'.")
-        cid = str(cid).strip()
-        if not cid:
-            raise CanonicalCatalogError("Material 'canonical_id' cannot be empty.")
         if cid in mats:
             raise CanonicalCatalogError(f"Duplicate canonical_id: {cid}")
 
-        labels = raw.get("labels", {})
-        if not isinstance(labels, dict) or not labels:
+        label_es = str(raw.get("label_es", "")).strip()
+        if not label_es:
+            raise CanonicalCatalogError(f"{cid}: missing required field 'label_es'.")
+
+        group = str(raw.get("group", "")).strip()
+        if not group:
+            raise CanonicalCatalogError(f"{cid}: missing required field 'group'.")
+
+        qb = str(raw.get("quantity_basis", "")).strip()
+        allowed = {"length_m", "area_m2", "volume_m3", "count", "none"}
+        if qb not in allowed:
             raise CanonicalCatalogError(
-                f"{cid}: 'labels' must be a non-empty dict (e.g. labels: {{es: '...'}})."
+                f"{cid}: invalid quantity_basis '{qb}'. Allowed: {sorted(allowed)}"
             )
 
         # Optional keywords: normalize to uppercase tuple for consistent matching
@@ -140,31 +93,15 @@ def load_catalog(path: str | Path) -> CanonicalCatalog:
 
         mats[cid] = CanonicalMaterial(
             canonical_id=cid,
-            labels={str(k): str(v) for k, v in labels.items()},
-            kind=raw["kind"],
-            group=str(raw["group"]),
-            measurable_in_v1=bool(raw["measurable_in_v1"]),
-            quantity_basis=raw["quantity_basis"],
-            supports_secondary_basis=list(raw.get("supports_secondary_basis", [])),
-            required_parameters=list(raw.get("required_parameters", [])),
-            optional_parameters=list(raw.get("optional_parameters", [])),
-            expected_geometry=list(raw.get("expected_geometry", [])),
-            strategy_hint=raw.get("strategy_hint"),
-            status=raw.get("status", "active"),
-            notes=raw.get("notes"),
+            label_es=label_es,
+            group=group,
+            quantity_basis=qb,  # type: ignore[assignment]
             keywords=kw_tuple,
         )
-
-    # Cross-validation: referenced parameters must exist
-    for cid, m in mats.items():
-        for pk in (m.required_parameters + m.optional_parameters):
-            if pk not in params:
-                raise CanonicalCatalogError(f"{cid} references unknown parameter: {pk}")
 
     return CanonicalCatalog(
         version=int(data["version"]),
         locale_default=str(data["locale_default"]),
-        parameters=params,
         materials=mats,
     )
 
@@ -187,22 +124,18 @@ def get_catalog() -> CanonicalCatalog:
     return _CACHED
 
 
-def get_dropdown(locale: str = "es", include_unknown: bool = False) -> List[dict]:
+def get_dropdown(include_unknown: bool = False) -> List[dict]:
     """
     Returns a list for UI dropdowns:
-      [{"id": "<canonical_id>", "label": "<localized label>", "group": "<group>", "kind": "<kind>"}]
+      [{"id": "<canonical_id>", "label": "<Spanish label>", "group": "<group>"}]
     """
     cat = get_catalog()
     items: List[dict] = []
 
     for m in cat.materials.values():
-        if m.status != "active":
-            continue
         if not include_unknown and m.canonical_id == "unknown":
             continue
-
-        label = m.labels.get(locale) or m.labels.get(cat.locale_default) or m.canonical_id
-        items.append({"id": m.canonical_id, "label": label, "group": m.group, "kind": m.kind})
+        items.append({"id": m.canonical_id, "label": m.label_es, "group": m.group})
 
     items.sort(key=lambda x: (x["group"], x["label"]))
     return items
@@ -211,8 +144,8 @@ def get_dropdown(locale: str = "es", include_unknown: bool = False) -> List[dict
 def get_keywords() -> Dict[str, Tuple[str, ...]]:
     """
     Returns keyword suggestions mapping:
-      {"slab": ("LOSA", "SLAB", ...), ...}
-    Intended for Phase 3 mapping suggestions from layer names.
+      {"WALL": ("MURO", "WALL", ...), ...}
+    Intended for mapping suggestions from layer names.
     """
     cat = get_catalog()
     return {cid: m.keywords for cid, m in cat.materials.items() if m.keywords}
@@ -226,15 +159,17 @@ def get_material(canonical_id: str) -> CanonicalMaterial:
         raise CanonicalCatalogError(f"Unknown canonical_id: {canonical_id}")
 
 
-def list_by_group(group: str, locale: str = "es") -> List[dict]:
+def list_by_group(group: str) -> List[dict]:
+    """
+    Returns items in a given group for UI filtering.
+    """
     cat = get_catalog()
     out: List[dict] = []
 
     for m in cat.materials.values():
-        if m.group != group or m.status != "active":
+        if m.group != group:
             continue
-        label = m.labels.get(locale) or m.labels.get(cat.locale_default) or m.canonical_id
-        out.append({"id": m.canonical_id, "label": label, "kind": m.kind})
+        out.append({"id": m.canonical_id, "label": m.label_es})
 
     out.sort(key=lambda x: x["label"])
     return out
