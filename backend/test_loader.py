@@ -1,7 +1,7 @@
 from core.loader import load_dxf
 from collections import Counter
 
-DXF_PATH = "./blueprints/#House-complete-project.dxf"   # use a real blueprint
+DXF_PATH = "blueprints/#House-complete-project.dxf"   # use a real blueprint
 
 def main():
     doc, msp, units = load_dxf(DXF_PATH)
