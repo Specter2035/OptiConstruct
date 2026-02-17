@@ -1,0 +1,79 @@
+version: 1
+locale_default: es
+
+materials:
+  - canonical_id: unknown
+    label_es: "Desconocido"
+    group: "Meta"
+    quantity_basis: none
+    keywords: []
+
+  # Estructural
+  - canonical_id: FOUNDATION
+    label_es: "Cimentación"
+    group: "Estructural"
+    quantity_basis: volume_m3
+    keywords: ["CIMENT", "ZAPATA", "DALA", "CADENA", "FUND", "FOUND", "FOOTING"]
+
+  - canonical_id: COLUMN
+    label_es: "Columna"
+    group: "Estructural"
+    quantity_basis: volume_m3
+    keywords: ["COLUM", "COLUMN", "PILAR", "POST"]
+
+  - canonical_id: BEAM
+    label_es: "Viga"
+    group: "Estructural"
+    quantity_basis: volume_m3
+    keywords: ["VIGA", "BEAM", "TRABE", "TRAB", "DAL"]
+
+  - canonical_id: SLAB
+    label_es: "Losa"
+    group: "Estructural"
+    quantity_basis: area_m2
+    keywords: ["LOSA", "SLAB", "PLACA"]
+
+  - canonical_id: WALL
+    label_es: "Muro"
+    group: "Estructural"
+    quantity_basis: area_m2
+    keywords: ["MURO", "WALL", "PARED", "TABIQUE"]
+
+  # Aberturas
+  - canonical_id: DOOR
+    label_es: "Puerta"
+    group: "Aberturas"
+    quantity_basis: count
+    keywords: ["PUERTA", "DOOR", "DOR", "PORTA"]
+
+  - canonical_id: WINDOW
+    label_es: "Ventana"
+    group: "Aberturas"
+    quantity_basis: count
+    keywords: ["VENTANA", "WINDOW", "WIN", "VNT"]
+
+  # Acabados
+  - canonical_id: FLOOR_FINISH
+    label_es: "Piso (acabado)"
+    group: "Acabados"
+    quantity_basis: area_m2
+    keywords: ["PISO", "FLOOR", "TILE", "LOSETA", "CERAM", "PORCEL"]
+
+  - canonical_id: WALL_FINISH
+    label_es: "Muro (acabado)"
+    group: "Acabados"
+    quantity_basis: area_m2
+    keywords: ["ACAB", "PINT", "PASTA", "YESO", "ENJARRE", "REVEST"]
+
+  # Sistemas
+  - canonical_id: ELECTRICAL
+    label_es: "Eléctrico"
+    group: "Sistemas"
+    quantity_basis: none
+    keywords: ["ELEC", "ELECT", "CONTACTO", "APAGADOR", "SWITCH", "TABLERO"]
+
+  - canonical_id: PLUMBING
+    label_es: "Hidrosanitario"
+    group: "Sistemas"
+    quantity_basis: none
+    keywords: ["AGUA", "HIDRO", "SANIT", "DRENAJE", "PLUMB", "TUBERIA"]

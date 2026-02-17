@@ -1,0 +1,105 @@
+.
+├── README.md
+├── backend
+│   ├── blueprints
+│   │   ├── ##1100-sq.-ft.Small-Cabin-3-Bedrooms.dxf
+│   │   ├── ##call-center-offices.dxf
+│   │   ├── #1100-sq.-ft.Small-Cabin-3-Bedrooms.dxf
+│   │   ├── #House-complete-project.dxf
+│   │   ├── #call-center-offices.dxf
+│   │   ├── 1100-sq.-ft.Small-Cabin-3-Bedrooms.dxf
+│   │   ├── House-complete-project.dxf
+│   │   └── call-center-offices.dxf
+│   ├── config
+│   │   ├── defaults.yml
+│   │   └── layers.yml
+│   ├── core
+│   │   ├── __pycache__
+│   │   │   └── loader.cpython-38.pyc
+│   │   ├── canonical.py
+│   │   ├── layer_map.py
+│   │   ├── loader.py
+│   │   └── normalizer.py
+│   ├── domain
+│   │   ├── opening.py
+│   │   ├── room.py
+│   │   ├── slab.py
+│   │   └── wall.py
+│   ├── geometry
+│   │   ├── cleaners.py
+│   │   ├── converters.py
+│   │   └── offsets.py
+│   ├── main.py
+│   ├── measurements
+│   │   ├── global_metrics.py
+│   │   ├── room_metrics.py
+│   │   └── wall_metrics.py
+│   ├── output
+│   │   ├── exporters.py
+│   │   └── quantities.py
+│   ├── src
+│   │   ├── app
+│   │   ├── controllers
+│   │   ├── db
+│   │   ├── routes
+│   │   ├── services
+│   │   │   ├── engineClient
+│   │   │   ├── geolocation
+│   │   │   └── pricing
+│   │   ├── utils
+│   │   └── validators
+│   ├── structurePrevious.txt
+│   ├── structureProyectoIntegrador.txt
+│   ├── test_loader.py
+│   └── validation
+│       ├── blueprint_checks.py
+│       └── geometry_checks.py
+├── database
+│   └── databse
+├── engine
+├── frontend
+│   ├── ImagesAcceso
+│   │   ├── direction.svg
+│   │   ├── email.png
+│   │   ├── email.svg
+│   │   ├── fondo.jpeg
+│   │   ├── logo.png
+│   │   ├── mision.png
+│   │   ├── name.png
+│   │   ├── name.svg
+│   │   ├── password.png
+│   │   ├── password.svg
+│   │   ├── phone.svg
+│   │   ├── valores.png
+│   │   └── vision.png
+│   ├── Script.js
+│   ├── css
+│   │   ├── cssUsuario.css
+│   │   └── templatemo-3d-coverflow.css
+│   ├── dashboardSucursal.php
+│   ├── dashboardUsuario.php
+│   ├── images
+│   │   ├── Construccion01.jpg
+│   │   ├── Construccion02.jpg
+│   │   ├── Construccion03.jpg
+│   │   ├── Construccion04.avif
+│   │   ├── Construccion05.jpg
+│   │   ├── Construccion06.jpg
+│   │   ├── Construccion07.png
+│   │   ├── cascading-waterfall.jpg
+│   │   ├── forest-path.jpg
+│   │   ├── mountain-landscape.jpg
+│   │   ├── ocean-sunset-golden-hour.jpg
+│   │   ├── rolling-sand-dunes.jpg
+│   │   ├── serene-water-mirroring.jpg
+│   │   └── starry-night.jpg
+│   ├── index.php
+│   ├── php
+│   │   ├── conexion_be.php
+│   │   ├── login.php
+│   │   └── registro_usuario_be.php
+│   ├── structure.txt
+│   └── templatemo-3d-coverflow-scripts.js
+└── structure.txt
+
+29 directories, 73 files
