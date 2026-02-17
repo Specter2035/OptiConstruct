@@ -1,0 +1,62 @@
+.
+├── __init__.py
+├── __pycache__
+│   └── __init__.cpython-38.pyc
+├── blueprints
+│   ├── ##1100-sq.-ft.Small-Cabin-3-Bedrooms.dxf
+│   ├── ##call-center-offices.dxf
+│   ├── #1100-sq.-ft.Small-Cabin-3-Bedrooms.dxf
+│   ├── #House-complete-project.dxf
+│   ├── #call-center-offices.dxf
+│   ├── 1100-sq.-ft.Small-Cabin-3-Bedrooms.dxf
+│   ├── House-complete-project.dxf
+│   └── call-center-offices.dxf
+├── config
+│   ├── README.md
+│   ├── canonical_catalog.yml
+│   ├── defaults.yml
+│   └── layers.yml
+├── fases
+│   ├── 01_carga_dxf
+│   │   ├── loader.py
+│   │   └── test_loader.py
+│   ├── 02_normalizacion
+│   │   └── normalizer.py
+│   ├── 03_interpretacion_capas
+│   │   ├── canonical.py
+│   │   └── layer_map.py
+│   ├── 04_extraccion_geometria
+│   │   ├── cleaners.py
+│   │   ├── converters.py
+│   │   └── offsets.py
+│   ├── 05_objetos_dominio
+│   │   ├── opening.py
+│   │   ├── room.py
+│   │   ├── slab.py
+│   │   └── wall.py
+│   ├── 06_mediciones
+│   │   ├── global_metrics.py
+│   │   ├── room_metrics.py
+│   │   └── wall_metrics.py
+│   ├── 07_validacion
+│   │   ├── blueprint_checks.py
+│   │   └── geometry_checks.py
+│   └── 08_exportacion
+│       ├── exporters.py
+│       └── quantities.py
+├── main.py
+├── src
+│   ├── app
+│   ├── controllers
+│   ├── db
+│   ├── routes
+│   ├── services
+│   │   ├── engineClient
+│   │   ├── geolocation
+│   │   └── pricing
+│   ├── utils
+│   └── validators
+├── structure1.py
+└── structure2.txt
+
+23 directories, 36 files
